@@ -37,7 +37,7 @@ $entries = load_entries();
                 <?= htmlspecialchars($name ?? 'Gästebuch'); ?>
             </h1>
             <button type="button" class="button" popovertarget="entry-popover" popovertargetaction="show">
-            <svg viewBox="0 0 256 256">
+                <svg viewBox="0 0 256 256">
                     <path d="M224 128a8 8 0 0 1-8 8h-80v80a8 8 0 0 1-16 0v-80H40a8 8 0 0 1 0-16h80V40a8 8 0 0 1 16 0v80h80a8 8 0 0 1 8 8Z" />
                 </svg>
                 <?= htmlspecialchars($new_entry ?? 'Neuer Eintrag'); ?>
@@ -75,11 +75,12 @@ $entries = load_entries();
 
         <!-- Ausgabe der Gästebucheinträge -->
         <section class="guestbook-entries">
-            <h2>Einträge</h2>
 
             <?php if (empty($entries)): ?>
                 <p>Es sind noch keine Einträge vorhanden.</p>
             <?php else: ?>
+                <h2><?= count($entries) === 1 ? '1 Eintrag' : count($entries) . ' Einträge'; ?></h2>
+
                 <?php foreach ($entries as $entry): ?>
                     <article class="gb-entry">
                         <header class="gb-entry__header">
@@ -102,6 +103,8 @@ $entries = load_entries();
                 <?php endforeach; ?>
             <?php endif; ?>
         </section>
+
+
     </section>
 
     <!-- Footer -->

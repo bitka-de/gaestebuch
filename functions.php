@@ -102,7 +102,7 @@ function save_entry(string $name, string $email, ?string $domain, string $messag
  */
 function load_entries(): array
 {
-    $filePath = __DIR__ . '/../data/entries.txt';
+    $filePath = __DIR__ . '/data/entries.txt';
     $entries = [];
 
     if (!file_exists($filePath)) {
@@ -115,7 +115,7 @@ function load_entries(): array
         $data = json_decode($line, true);
         if (is_array($data)) {
             $entries[] = [
-                'title'     => 'Eintrag vom ' . date('d.m.Y', strtotime($data['date'] ?? '')),
+                'title'     => !empty($data['title']) ? $data['title'] : ($data['name'] ?? 'Name'),
                 'iso_date'  => $data['date'] ?? '',
                 'author'    => $data['name'] ?? '',
                 'email'     => $data['email'] ?? '',
@@ -125,7 +125,13 @@ function load_entries(): array
         }
     }
 
-    return array_reverse($entries ?: get_default_entries());
+    $defaultEntries = get_default_entries();
+    $allEntries = array_merge($entries, $defaultEntries);
+    usort($allEntries, function ($a, $b) {
+        return strtotime($b['iso_date']) <=> strtotime($a['iso_date']);
+    });
+
+    return $allEntries;
 }
 
 
