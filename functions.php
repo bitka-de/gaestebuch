@@ -9,8 +9,8 @@
  */
 function formatDate(string $isoDate): string
 {
-    // Erstellen eines DateTime-Objekts aus dem ISO 8601 Datum
-    $date = DateTime::createFromFormat('Y-m-d', $isoDate);
+    // Erstellen eines DateTime-Objekts aus dem ISO 8601 Datum oder Datum mit Zeit
+    $date = DateTime::createFromFormat('Y-m-d H:i:s', $isoDate) ?: DateTime::createFromFormat('Y-m-d', $isoDate);
 
     // Überprüfen, ob das Datum korrekt geparsed werden konnte
     if (!$date) {
@@ -100,4 +100,22 @@ function save_entry($name, $email, $domain, $message) {
         flock($file, LOCK_UN);
         fclose($file);
     }
+}
+
+function load_entries() {
+    $file = __DIR__ . '/data/entries.txt';
+    $entries = [];
+
+    if (!file_exists($file)) return $entries;
+
+    $lines = file($file, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+
+    foreach ($lines as $line) {
+        $entry = json_decode($line, true);
+        if ($entry) {
+            $entries[] = $entry;
+        }
+    }
+
+    return array_reverse($entries); // Neueste zuerst
 }

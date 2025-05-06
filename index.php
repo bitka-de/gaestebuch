@@ -2,6 +2,8 @@
 // Jan P. Behrens | Webmasters-Europe
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/functions.php';
+
+$entries = load_entries();
 ?>
 
 <!DOCTYPE html>
@@ -60,6 +62,30 @@ require_once __DIR__ . '/functions.php';
             </form>
         </section>
 
+
+
+        <section class="guestbook-entries">
+            <h2>Einträge</h2>
+            <?php if (empty($entries)): ?>
+                <p>Es sind noch keine Einträge vorhanden.</p>
+            <?php else: ?>
+                <?php foreach ($entries as $entry): ?>
+                    <article class="gb-entry">
+                        <header class="gb-entry__header">
+                            <h3 class="gb-entry__title"><?= $entry['name'] ?? 'No Title'; ?></h3>
+                            <time class="gb-entry__date" datetime="<?= $entry['date'] ?? '2025-04-19'; ?>"><?= formatDate($entry['date']) ?? formatDate('2025-04-19'); ?></time>
+                        </header>
+                        <p class="gb-entry__content"><?= nl2br(htmlspecialchars($entry['message'])) ?? 'No Content'; ?></p>
+                        <section class="gb-entry__meta">
+                            <span class="gb-entry__author"><?= $entry['name'] ?? 'No Author'; ?></span> |
+                            <a href="mailto:{{Email}}" class="gb-entry__email"><?= maskEmail($entry['email']) ?? maskEmail('nomail@example.com'); ?></a> |
+                            <a href="<?= $entry['domain'] ?? 'https://example.com'; ?>" class="gb-entry__homepage" target="_blank" rel="noopener"><?= extractDomain($entry['domain'] ?? 'https://example.com'); ?></a>
+                        </section>
+
+                    </article>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </section>
 
         <?php foreach ($guestbook_entries as $entry): ?>
 
