@@ -412,3 +412,63 @@ body {
   height: 1px;
   overflow: hidden;
 }
+
+
+@media print {
+  body {
+    background: none;
+    color: black;
+    font-family: var(--font-base);
+    line-height: 1.5;
+  }
+
+  .gb,
+  .content,
+  .boxed {
+    display: block;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .gb-header,
+  .gb-footer,
+  .button,
+  .toast,
+  .form-popover {
+    display: none;
+  }
+
+  .gb-entry {
+    border: 1px solid black;
+    box-shadow: none;
+    page-break-inside: avoid;
+  }
+
+  .gb-entry__header,
+  .gb-entry__content,
+  .gb-entry__meta {
+    margin: 0;
+    padding: 0;
+  }
+
+  .guestbook-form,
+  .form-container {
+    display: none;
+  }
+
+  a {
+    color: black;
+    text-decoration: underline;
+  }
+
+  a:hover {
+    text-decoration: none;
+  }
+
+  button{
+    display: none;
+  }
+}
