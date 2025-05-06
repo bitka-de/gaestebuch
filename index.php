@@ -3,12 +3,11 @@
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/functions.php';
 
-// Gästebucheinträge laden
 $entries = load_entries();
 ?>
 
 <!DOCTYPE html>
-<html lang="<?= $lang ?? 'de'; ?>">
+<html lang="<?= htmlspecialchars($lang ?? 'de'); ?>">
 
 <head>
     <meta charset="UTF-8">
@@ -21,11 +20,11 @@ $entries = load_entries();
 
     <!-- Erfolgs- oder Fehlermeldung als Toast anzeigen -->
     <?php if (!empty($_GET['success']) || !empty($_GET['error'])): ?>
-        <?php 
-            $toastType = !empty($_GET['success']) ? 'success' : 'error';
-            $toastMessage = !empty($_GET['success']) 
-                ? 'Vielen Dank! Dein Eintrag wurde gespeichert.' 
-                : htmlspecialchars($_GET['error']);
+        <?php
+        $toastType = !empty($_GET['success']) ? 'success' : 'error';
+        $toastMessage = !empty($_GET['success'])
+            ? 'Vielen Dank! Dein Eintrag wurde gespeichert.'
+            : htmlspecialchars($_GET['error'], ENT_QUOTES, 'UTF-8');
         ?>
         <div id="toast" class="toast <?= $toastType ?>">
             <span><?= $toastMessage ?></span>
@@ -33,7 +32,6 @@ $entries = load_entries();
         </div>
     <?php endif; ?>
 
-    <!-- Kopfbereich mit Logo und Button -->
     <header class="gb-header">
         <section class="boxed flex-between">
             <h1 class="gb-header__logo">
@@ -51,9 +49,7 @@ $entries = load_entries();
         </section>
     </header>
 
-    <!-- Hauptbereich -->
     <section class="content boxed">
-
         <!-- Formular für neue Gästebucheinträge -->
         <div id="entry-popover" popover class="form-popover">
             <form action="submit.php" method="POST" class="guestbook-form">
@@ -77,16 +73,14 @@ $entries = load_entries();
                 </div>
 
                 <div class="honeypot" style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;">
-                    <label for="website">Honeypod</label>
+                    <label for="website">Honeypot</label>
                     <input type="text" id="website" name="website" autocomplete="off">
                 </div>
             </form>
         </div>
 
-
-        <!-- Ausgabe der Gästebucheinträge -->
+        <!-- Gästebucheinträge -->
         <section class="guestbook-entries">
-
             <?php if (empty($entries)): ?>
                 <p>Es sind noch keine Einträge vorhanden.</p>
             <?php else: ?>
@@ -95,14 +89,20 @@ $entries = load_entries();
                 <?php foreach ($entries as $entry): ?>
                     <article class="gb-entry">
                         <header class="gb-entry__header">
-                            <h3 class="gb-entry__title"><?= htmlspecialchars($entry['title'] ?? $entry['name'] ?? 'Kein Titel'); ?></h3>
+                            <h3 class="gb-entry__title">
+                                <?= htmlspecialchars($entry['title'] ?? $entry['name'] ?? 'Kein Titel', ENT_QUOTES, 'UTF-8'); ?>
+                            </h3>
                             <time class="gb-entry__date" datetime="<?= htmlspecialchars($entry['iso_date'] ?? $entry['date'] ?? '2025-04-19'); ?>">
                                 <?= formatDate($entry['iso_date'] ?? $entry['date'] ?? '2025-04-19'); ?>
                             </time>
                         </header>
-                        <p class="gb-entry__content"><?= nl2br(htmlspecialchars($entry['content'] ?? $entry['message'] ?? 'Kein Inhalt')) ?></p>
+                        <p class="gb-entry__content">
+                            <?= nl2br(htmlspecialchars($entry['content'] ?? $entry['message'] ?? 'Kein Inhalt', ENT_QUOTES, 'UTF-8')); ?>
+                        </p>
                         <section class="gb-entry__meta">
-                            <span class="gb-entry__author"><?= htmlspecialchars($entry['author'] ?? $entry['name'] ?? 'Unbekannt'); ?></span> |
+                            <span class="gb-entry__author">
+                                <?= htmlspecialchars($entry['author'] ?? $entry['name'] ?? 'Unbekannt', ENT_QUOTES, 'UTF-8'); ?>
+                            </span> |
                             <a href="mailto:<?= htmlspecialchars($entry['email'] ?? 'nomail@example.com'); ?>" class="gb-entry__email">
                                 <?= maskEmail($entry['email'] ?? 'nomail@example.com'); ?>
                             </a> |
@@ -114,20 +114,16 @@ $entries = load_entries();
                 <?php endforeach; ?>
             <?php endif; ?>
         </section>
-
-
     </section>
 
-    <!-- Footer -->
     <footer class="gb-footer">
         <section class="boxed">
             <div class="gb-footer__copyright">
-                &copy; <?= date('Y'); ?> by <?= htmlspecialchars($creator ?? 'Unbekannt'); ?>
+                &copy; <?= date('Y'); ?> by <?= htmlspecialchars($creator ?? 'Unbekannt', ENT_QUOTES, 'UTF-8'); ?>
             </div>
         </section>
     </footer>
 
-    <!-- JS zur Toaststeuerung -->
     <script src="/assets/script.js" defer></script>
 </body>
 

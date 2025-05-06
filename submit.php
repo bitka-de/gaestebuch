@@ -14,7 +14,6 @@ session_start();
 // Bot-Schutz: Honeypot prüfen
 // -------------------------------------------------------------
 if (!empty($_POST['website'])) {
-    // Bot erkannt
     header("Location: index.php?error=" . urlencode("Deine Eingabe wurde als Spam erkannt."));
     exit;
 }
@@ -35,54 +34,45 @@ $_SESSION['submit_times'] = array_filter(
     fn($ts) => $ts > time() - $windowSeconds
 );
 
+// Wenn das Limit erreicht wurde, abbrechen
 if (count($_SESSION['submit_times']) >= $maxSubmits) {
     header("Location: index.php?error=" . urlencode("Bitte warte einen Moment, bevor du erneut etwas einträgst."));
     exit;
 }
 
-
+// -------------------------------------------------------------
+// Verarbeitung der Formulardaten
+// -------------------------------------------------------------
+extract(array_map('trim', $_POST), EXTR_PREFIX_ALL, 'form');
+$name    = $form_name ?? '';
+$email   = $form_email ?? '';
+$domain  = $form_domain ?? '';
+$message = $form_message ?? '';
 
 // -------------------------------------------------------------
-// Verarbeitung der Formulardaten aus index.php
-// -------------------------------------------------------------
-
-// Eingaben bereinigen
-$name    = trim($_POST['name'] ?? '');
-$email   = trim($_POST['email'] ?? '');
-$domain  = trim($_POST['domain'] ?? '');
-$message = trim($_POST['message'] ?? '');
-
-// -------------------------------------------------------------
-// Validierung der Benutzereingaben
+// Validierung
 // -------------------------------------------------------------
 $errors = [];
 
-// Pflichtfelder prüfen (dynamisch mit Trim)
-$requiredFields = [
-    'Name'    => $name,
-    'E-Mail'  => $email,
-    'Nachricht' => $message
-];
+$requiredFields = compact('name', 'email', 'message');
+$requiredFields = array_combine(['Name', 'E-Mail', 'Nachricht'], $requiredFields);
 
-foreach ($requiredFields as $label => $value) {
-    if (trim($value) === '') {
-        $errors[] = "Bitte fülle das Feld „{$label}“ aus.";
-    }
-}
+$errors = array_map(
+    fn($label, $value) => trim($value) === '' ? "Bitte fülle das Feld „{$label}“ aus." : null,
+    array_keys($requiredFields),
+    $requiredFields
+);
 
-// E-Mail prüfen
+$errors = array_filter($errors);
+
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $errors[] = 'Bitte gib eine gültige E-Mail-Adresse an.';
 }
 
-// Domain prüfen (wenn angegeben)
 if ($domain !== '' && !filter_var($domain, FILTER_VALIDATE_URL)) {
     $errors[] = 'Bitte gib eine gültige URL an oder lass das Feld leer.';
 }
 
-// -------------------------------------------------------------
-// Bei Fehlern zurück zur Startseite mit Fehlermeldung
-// -------------------------------------------------------------
 if (!empty($errors)) {
     $errorString = urlencode(implode(' ', $errors));
     header("Location: index.php?error={$errorString}");
@@ -90,9 +80,18 @@ if (!empty($errors)) {
 }
 
 // -------------------------------------------------------------
-// Daten speichern & Weiterleitung bei Erfolg
+// Daten escapen & speichern
 // -------------------------------------------------------------
-save_entry($name, $email, $domain, $message);
+[$nameEsc, $emailEsc, $domainEsc, $messageEsc] = array_map(
+    fn($value) => htmlspecialchars($value, ENT_QUOTES, 'UTF-8'),
+    [$name, $email, $domain !== '' ? $domain : '', $message]
+);
+
+save_entry($nameEsc, $emailEsc, $domainEsc, $messageEsc);
+
+// Timestamp für Rate-Limit speichern
 $_SESSION['submit_times'][] = time();
+
+// Erfolgreiche Weiterleitung
 header("Location: index.php?success=1");
 exit;
