@@ -16,6 +16,13 @@ require_once __DIR__ . '/functions.php';
 
 <body class="gb">
 
+    <?php if (isset($_GET['success']) || isset($_GET['error'])): ?>
+        <div id="toast" class="toast <?= isset($_GET['success']) ? 'success' : 'error' ?>">
+            <span><?= htmlspecialchars($_GET['success'] ? 'Vielen Dank! Dein Eintrag wurde gespeichert.' : $_GET['error']) ?></span>
+            <button onclick="closeToast()">×</button>
+        </div>
+    <?php endif; ?>
+
     <header class="gb-header">
         <section class="boxed flex-between">
             <h1 class="gb-header__logo">
@@ -33,6 +40,26 @@ require_once __DIR__ . '/functions.php';
     </header>
 
     <section class="content boxed">
+
+        <section class="form-container">
+
+            <form action="submit.php" method="POST" class="guestbook-form">
+                <label for="name">Name</label>
+                <input type="text" name="name" id="name" placeholder="Dein Name" required>
+
+                <label for="email">E-Mail-Adresse</label>
+                <input type="email" name="email" id="email" placeholder="z. B. max@example.com" required>
+
+                <label for="domain">Webseite (optional)</label>
+                <input type="url" required="false" name="domain" id="domain" placeholder="https://deine-seite.de">
+
+                <label for="message">Nachricht</label>
+                <textarea name="message" id="message" rows="5" placeholder="Deine Nachricht" required></textarea>
+
+                <button type="submit">Absenden</button>
+            </form>
+        </section>
+
 
         <?php foreach ($guestbook_entries as $entry): ?>
 
@@ -63,6 +90,7 @@ require_once __DIR__ . '/functions.php';
         </section>
     </footer>
 
+    <script src="/assets/script.js" defer></script>
 </body>
 
 </html>

@@ -81,3 +81,23 @@ function extractDomain(string $url): string
     // Rückgabe der Domain (host), falls vorhanden, ansonsten ein leerer String
     return $parsedUrl['host'] ?? ''; // Wenn 'host' nicht existiert, wird ein leerer String zurückgegeben
 }
+
+function save_entry($name, $email, $domain, $message) {
+    $entry = [
+        'date' => date("Y-m-d H:i:s"),
+        'name' => htmlspecialchars($name),
+        'email' => htmlspecialchars($email),
+        'domain' => $domain ? htmlspecialchars($domain) : null,
+        'message' => htmlspecialchars($message)
+    ];
+
+    $line = json_encode($entry) . PHP_EOL;
+
+    $file = fopen(__DIR__ . '/data/entries.txt', 'a');
+    if ($file) {
+        flock($file, LOCK_EX);
+        fwrite($file, $line);
+        flock($file, LOCK_UN);
+        fclose($file);
+    }
+}
