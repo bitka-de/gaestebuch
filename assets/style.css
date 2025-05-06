@@ -1,29 +1,60 @@
 @import url("./base.css");
 
 /* ==========================================================================
-   Variablen
+   Design Tokens (CSS Variablen)
    ========================================================================== */
 :root {
-  --background: hsl(0, 0%, 95%);
-  --primary: hsl(217, 100%, 55%);
-  --primary-dark: hsl(217, 100%, 45%);
+  --color-bg: hsl(0, 0%, 95%);
+  --color-primary: hsl(217, 100%, 55%);
+  --color-primary-dark: hsl(217, 100%, 45%);
+  --color-border: #ddd;
+  --color-text: #333;
+  --color-muted: #999;
+  --color-link: #007acc;
+  --color-white: #ffffff;
+  --color-light: #f2f2f2;
+  --color-gray: #ccc;
+  --color-success: #2e7d32;
+  --color-error: #c62828;
+
+  --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+  --shadow-md-hover: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.2);
 
   --max-width: 960px;
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-round: 25rem;
+
+  --space-xs: 0.125rem;
+  --space-sm: 0.5rem;
+  --space-md: 0.75rem;
+  --space-lg: 1.25rem;
+  --space-xl: 2rem;
+
+  --font-base: system-ui, sans-serif;
+  --font-size-sm: 0.85rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.25rem;
 }
 
 /* ==========================================================================
    Basis-Layout
    ========================================================================== */
 body {
-  background-color: var(--background);
+  background-color: var(--color-bg);
+  font-family: var(--font-base);
 }
 
 .gb {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
+  gap: var(--space-md);
   min-height: 100vh;
-  min-height: 100dvh; /* Fallback für mobile Browser */
+  min-height: 100dvh;
 }
 
 /* ==========================================================================
@@ -36,23 +67,23 @@ body {
 .gb-header__logo {
   display: inline-flex;
   align-items: center;
-  gap: 0.625rem;
-  padding-block: 0.5rem;
+  gap: var(--space-sm);
+  padding-block: var(--space-sm);
   margin: 0;
   font-size: clamp(2rem, 2.5vw, 2.5rem);
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: 0.01em;
-  color: var(--primary);
+  color: var(--color-primary);
 }
 
 .gb-header__logo svg {
   width: 2.75rem;
   height: 2.75rem;
-  fill: var(--primary-dark);
+  fill: var(--color-primary-dark);
   background: linear-gradient(0deg, rgba(0, 0, 0, 0.05), white);
-  padding: 0.125rem;
-  border-radius: 0.25rem;
+  padding: var(--space-xs);
+  border-radius: var(--radius-sm);
   filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
 }
 
@@ -64,7 +95,6 @@ body {
   flex-grow: 1;
 }
 
-/* Boxed Layout */
 .boxed {
   width: 100vw;
   max-width: var(--max-width);
@@ -73,11 +103,10 @@ body {
 
 @media (max-width: 959px) {
   .boxed {
-    padding-inline: 0.75rem;
+    padding-inline: var(--space-md);
   }
 }
 
-/* Flex Utilities */
 .flex-between {
   width: 100%;
   display: flex;
@@ -91,33 +120,32 @@ body {
 .button {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.55rem 1.25rem;
-  background: var(--primary);
-  border-bottom: 0.125rem solid var(--primary-dark);
-  color: white;
-  border-radius: 25rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.2);
+  gap: var(--space-sm);
+  padding: 0.55rem var(--space-xl);
+  background: var(--color-primary);
+  border-bottom: 0.125rem solid var(--color-primary-dark);
+  color: var(--color-white);
+  border-radius: var(--radius-round);
+  box-shadow: var(--shadow-md);
   margin-left: auto;
   transition: box-shadow 0.3s ease;
 }
 
 .button:hover {
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-md-hover);
 }
 
 .button svg {
   width: 1.2rem;
   height: 1.2rem;
-  fill: white;
+  fill: var(--color-white);
 }
 
-/* Button-Position für mobile Endgeräte */
 @media (max-width: 959px) {
   .button {
     position: fixed;
-    bottom: 1.5rem;
-    right: 1.5rem;
+    bottom: var(--space-xl);
+    right: var(--space-xl);
   }
 }
 
@@ -126,46 +154,46 @@ body {
    ========================================================================== */
 .gb-footer {
   background-color: rgba(0, 0, 0, 0.05);
-  font-size: 0.85rem;
+  font-size: var(--font-size-sm);
 }
 
 .gb-footer__copyright {
-  padding-block: 0.5rem;
+  padding-block: var(--space-sm);
 }
 
 /* ==========================================================================
-   Entries (Beiträge)
+   Gästebucheinträge
    ========================================================================== */
 .gb-entry {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 1rem;
-  margin-bottom: 1.5rem;
-  font-family: system-ui, sans-serif;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
+  font-family: var(--font-base);
+  box-shadow: var(--shadow-sm);
 }
 
 .gb-entry__header {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--space-sm);
 }
 
 .gb-entry__title {
   margin: 0;
-  font-size: 1.25rem;
-  color: #333;
+  font-size: var(--font-size-lg);
+  color: var(--color-text);
 }
 
 .gb-entry__date {
-  font-size: 0.85rem;
-  color: #999;
+  font-size: var(--font-size-sm);
+  color: var(--color-muted);
 }
 
 .gb-entry__content {
-  margin: 1rem 0;
+  margin: var(--space-lg) 0;
   line-height: 1.5;
   color: #555;
 }
@@ -173,15 +201,15 @@ body {
 .gb-entry__meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
-  font-size: 0.85rem;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
   color: #666;
   border-top: 1px solid #eee;
-  padding-top: 0.5rem;
+  padding-top: var(--space-sm);
 }
 
 .gb-entry__meta a {
-  color: #007acc;
+  color: var(--color-link);
   text-decoration: none;
 }
 
@@ -190,37 +218,36 @@ body {
 }
 
 /* ==========================================================================
-   Eingabe Formular
+   Formular / Popover / Toast
    ========================================================================== */
-
 .form-container {
-  background-color: #ffffff;
-  border: 1px solid #ddd;
-  padding: 2rem;
-  border-radius: 8px;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-border);
+  padding: var(--space-xl);
+  border-radius: var(--radius-lg);
   max-width: 600px;
-  margin: 2rem auto;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  margin: var(--space-xl) auto;
+  box-shadow: var(--shadow-sm);
 }
 
 .guestbook-form {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: var(--space-lg);
 }
 
 .guestbook-form label {
   font-weight: bold;
-  margin-bottom: 0.2rem;
-  color: #333;
+  margin-bottom: var(--space-xs);
+  color: var(--color-text);
 }
 
 .guestbook-form input,
 .guestbook-form textarea {
   padding: 0.8rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  font-size: 1rem;
+  border: 1px solid var(--color-gray);
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-md);
   width: 100%;
   box-sizing: border-box;
   transition: border-color 0.2s ease;
@@ -232,69 +259,49 @@ body {
   outline: none;
 }
 
-.guestbook-form input[type="url"]::placeholder {
-  font-style: italic;
-  color: #888;
-}
-
-.guestbook-form button {
+.guestbook-form .button-send {
   padding: 0.9rem;
   background-color: #0078d4;
-  color: white;
+  color: var(--color-white);
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
   font-weight: bold;
   transition: background-color 0.2s ease;
 }
 
-.guestbook-form button:hover {
+.guestbook-form .button-send:hover {
   background-color: #005fa3;
 }
 
-@media (max-width: 600px) {
-  .form-container {
-    padding: 1rem;
-  }
-
-  .guestbook-form input,
-  .guestbook-form textarea {
-    font-size: 0.95rem;
-  }
-}
-
-/* ==========================================================================
-   Eingabe Formular
-   ========================================================================== */
-
 .toast {
   position: fixed;
-  bottom: 1rem;
-  right: 1rem;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
   background-color: #333;
-  color: white;
-  padding: 1rem 1.5rem;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  color: var(--color-white);
+  padding: var(--space-lg) var(--space-xl);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: var(--space-lg);
   z-index: 1000;
   animation: slideIn 0.3s ease-out;
 }
 
 .toast.success {
-  background-color: #2e7d32;
+  background-color: var(--color-success);
 }
 
 .toast.error {
-  background-color: #c62828;
+  background-color: var(--color-error);
 }
 
 .toast button {
   background: none;
   border: none;
-  color: white;
+  color: var(--color-white);
   font-size: 1.2rem;
   line-height: 1;
   cursor: pointer;
@@ -308,5 +315,86 @@ body {
   to {
     transform: translateY(0);
     opacity: 1;
+  }
+}
+
+.form-popover {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  width: 90vw;
+  max-width: 500px;
+  z-index: 1000;
+  box-shadow: var(--shadow-lg);
+  overflow: auto;
+  max-height: 90vh;
+}
+
+.form-popover::backdrop {
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(3px);
+}
+
+.form-popover h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+.form-actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top: var(--space-xl);
+  gap: var(--space-lg);
+}
+
+.button-cancel {
+  background-color: var(--color-light);
+  color: var(--color-text);
+  border: 1px solid var(--color-gray);
+  padding: 0.75rem var(--space-xl);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button-cancel:hover {
+  background-color: #e0e0e0;
+}
+
+@media (max-width: 480px) {
+  .form-popover {
+    padding: var(--space-md);
+    width: 95vw;
+  }
+
+  .form-popover h2 {
+    font-size: var(--font-size-lg);
+  }
+
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .form-container {
+    padding: var(--space-md);
+  }
+
+  .guestbook-form input,
+  .guestbook-form textarea {
+    font-size: 0.95rem;
   }
 }
