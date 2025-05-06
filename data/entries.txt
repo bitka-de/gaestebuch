@@ -1,4 +1,1 @@
-{"date":"2025-05-06 10:18:01","name":"Decken","email":"dede@ddde.de","domain":"https:\/\/www.web.de","message":"dededdekrflkreklfrel"}
-{"date":"2025-05-06 10:19:43","name":"Decken","email":"behrens.ka@icloud.com","domain":"https:\/\/codovo.com","message":"dededede"}
-{"date":"2025-05-06 10:26:11","name":"Decken","email":"behrens.ka@icloud.com","domain":null,"message":"rcrccff"}
-{"date":"2025-05-06 10:40:29","name":"Max Mustermann","email":"behrens.ka@icloud.com","domain":"https:\/\/www.web.de","message":"Hallo ich bin ein Originaler Musterman \r\nder Kommentare auch mehrzeilig verfasssen kann"}
+{"date":"2025-05-06 14:43:42","name":"JayPiii","email":"behrens.ka@icloud.com","domain":null,"message":"Hallo Welt"}

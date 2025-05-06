@@ -20,9 +20,15 @@ $entries = load_entries();
 <body class="gb">
 
     <!-- Erfolgs- oder Fehlermeldung als Toast anzeigen -->
-    <?php if (isset($_GET['success']) || isset($_GET['error'])): ?>
-        <div id="toast" class="toast <?= isset($_GET['success']) ? 'success' : 'error' ?>">
-            <span><?= htmlspecialchars($_GET['success'] ? 'Vielen Dank! Dein Eintrag wurde gespeichert.' : $_GET['error']) ?></span>
+    <?php if (!empty($_GET['success']) || !empty($_GET['error'])): ?>
+        <?php 
+            $toastType = !empty($_GET['success']) ? 'success' : 'error';
+            $toastMessage = !empty($_GET['success']) 
+                ? 'Vielen Dank! Dein Eintrag wurde gespeichert.' 
+                : htmlspecialchars($_GET['error']);
+        ?>
+        <div id="toast" class="toast <?= $toastType ?>">
+            <span><?= $toastMessage ?></span>
             <button onclick="closeToast()">×</button>
         </div>
     <?php endif; ?>
@@ -68,6 +74,11 @@ $entries = load_entries();
                 <div class="form-actions">
                     <button type="button" class="button-cancel" popovertarget="entry-popover" popovertargetaction="hide">Abbrechen</button>
                     <button type="submit" class="button send">Absenden</button>
+                </div>
+
+                <div class="honeypot" style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;">
+                    <label for="website">Honeypod</label>
+                    <input type="text" id="website" name="website" autocomplete="off">
                 </div>
             </form>
         </div>

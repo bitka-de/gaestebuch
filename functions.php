@@ -71,27 +71,43 @@ function extractDomain(string $url): string
  * @param string $email
  * @param string|null $domain
  * @param string $message
- * @return void
+ * @return bool Gibt true zurück, wenn der Eintrag erfolgreich gespeichert wurde, andernfalls false.
  */
-function save_entry(string $name, string $email, ?string $domain, string $message): void
+function save_entry(string $name, string $email, ?string $domain, string $message): bool
 {
     $entry = [
         'date'    => date("Y-m-d H:i:s"),
-        'name'    => htmlspecialchars($name),
-        'email'   => htmlspecialchars($email),
-        'domain'  => $domain ? htmlspecialchars($domain) : null,
-        'message' => htmlspecialchars($message)
+        'name'    => htmlspecialchars($name, ENT_QUOTES, 'UTF-8'),
+        'email'   => htmlspecialchars($email, ENT_QUOTES, 'UTF-8'),
+        'domain'  => $domain ? htmlspecialchars($domain, ENT_QUOTES, 'UTF-8') : null,
+        'message' => htmlspecialchars($message, ENT_QUOTES, 'UTF-8')
     ];
 
     $line = json_encode($entry) . PHP_EOL;
-    $filePath = __DIR__ . '/../data/entries.txt';
+    $filePath = __DIR__ . '/data/entries.txt';
 
+    // Sicherstellen, dass das Verzeichnis existiert und beschreibbar ist
+    $directory = dirname($filePath);
+    if (!is_dir($directory) && !mkdir($directory, 0755, true)) {
+        return false;
+    }
+
+    if (!is_writable($directory)) {
+        return false;
+    }
+
+    // Datei öffnen und schreiben
     if ($file = fopen($filePath, 'a')) {
-        flock($file, LOCK_EX);
-        fwrite($file, $line);
-        flock($file, LOCK_UN);
+        if (flock($file, LOCK_EX)) {
+            fwrite($file, $line);
+            flock($file, LOCK_UN);
+            fclose($file);
+            return true;
+        }
         fclose($file);
     }
+
+    return false;
 }
 
 

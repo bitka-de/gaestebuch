@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Verarbeitet die Gästebucheinträge aus dem Formular (index.php).
  * 
@@ -7,6 +8,39 @@
  */
 
 require_once 'functions.php';
+session_start();
+
+// -------------------------------------------------------------
+// Bot-Schutz: Honeypot prüfen
+// -------------------------------------------------------------
+if (!empty($_POST['website'])) {
+    // Bot erkannt
+    header("Location: index.php?error=" . urlencode("Deine Eingabe wurde als Spam erkannt."));
+    exit;
+}
+
+// -------------------------------------------------------------
+// Bot-Schutz: Session Rate-Limit
+// -------------------------------------------------------------
+$maxSubmits = 3;
+$windowSeconds = 300;
+
+if (!isset($_SESSION['submit_times'])) {
+    $_SESSION['submit_times'] = [];
+}
+
+// Alte Zeitstempel entfernen
+$_SESSION['submit_times'] = array_filter(
+    $_SESSION['submit_times'],
+    fn($ts) => $ts > time() - $windowSeconds
+);
+
+if (count($_SESSION['submit_times']) >= $maxSubmits) {
+    header("Location: index.php?error=" . urlencode("Bitte warte einen Moment, bevor du erneut etwas einträgst."));
+    exit;
+}
+
+
 
 // -------------------------------------------------------------
 // Verarbeitung der Formulardaten aus index.php
@@ -59,6 +93,6 @@ if (!empty($errors)) {
 // Daten speichern & Weiterleitung bei Erfolg
 // -------------------------------------------------------------
 save_entry($name, $email, $domain, $message);
-
+$_SESSION['submit_times'][] = time();
 header("Location: index.php?success=1");
 exit;
